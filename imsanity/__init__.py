@@ -12,6 +12,7 @@ cur_dir = os.path.abspath(script_dir)
 # loop until we get to filesystem root
 while cur_dir != os.path.dirname(cur_dir):
     if os.path.isfile(os.path.join(cur_dir, '.imsanity')):
-        sys.path.append(cur_dir)
+        if cur_dir not in sys.path:
+            sys.path.append(cur_dir)
         break
     cur_dir = os.path.abspath(os.path.join(cur_dir, os.pardir))
