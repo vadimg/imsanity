@@ -43,3 +43,15 @@ Simply place a `.imsanity` file in the project root. Then, `import imsanity` at 
 ##### How does `reports.py` import `email.py`?
 `from lib import email` works, and allows you to run `./reports.py`
 
+### Does python really not have a solution to this?
+
+Well... there's [PEP 0366](https://www.python.org/dev/peps/pep-0366/), which recommends you put this:
+```
+if __name__ == "__main__" and __package__ is None:
+    __package__ = "expected.package.name"
+```
+at the top of every file. Key quotes:
+- > this boilerplate is sufficient only if the top level package is already accessible via `sys.path`
+- > if the script is moved to a different package or subpackage, the boilerplate will need to be updated manually
+
+My only response to this is: ahahahahahahahahaha :'(
