@@ -8,6 +8,7 @@ Python's import situation is terrible and unusable. `imsanity` makes it usable.
 ### What the dang?
 Say you have a python project (not a package), with the following structure:
 ```
+project_dir/
 |-- bin/
 |   |-- web_server.py
 |-- lib/
@@ -19,11 +20,11 @@ Say you have a python project (not a package), with the following structure:
 ```
 
 ##### How does `test_email.py` import `email.py`?
-- `import email` doesn't work, because `email` is a core python package
-- `from . import email` works, but won't work if you try to run `python test_email.py`. You have to run `python -m test_email` instead, which is annoying and unexpected.
+- `import email` will break your code in unexpected ways if some other package imports [email](https://docs.python.org/2/library/email.html), the core python package
+- `from . import email` works, but won't work if you try to run `python test_email.py`. You can't even run `python -m test_email`. You have to run `python -m lib.test_email` instead, which is annoying and unexpected.
 
 ##### How does `reports.py` import `email.py`?
-- `from ..lib import email` is the only thing that works, but it doesn't allow you to run `./reports.py`. You have to instead run `python -m reports`, which is *really* annoying and *very* unexpected.
+- `from ..lib import email` is the only thing that works, but it doesn't allow you to run `./reports.py`. You can't run `python -m reports`, either. You can't even run `python -m tools.reports`! You have to put an `__init__.py` file in both project_dir and the tools directory, cd to project_dir's parent directory, and run it with `python -m rootdir.tools.reports`. This is just *unusable*.
 - If you move `reports.py` to a subfolder inside tools, you'll have to update all its imports
 
 ### I guess add the project root to PYTHONPATH?
@@ -35,13 +36,16 @@ The only safe thing to do is add to the PYTHONPATH whenever you start working on
 
 #### Or, you can use `imsanity`
 
-Simply place a `.imsanity` file in the project root. Then, `import imsanity` at the top of the file. PYTHONPATH will now include the project root.
+Simply place a `.imsanity` file in the project root. Then, `import imsanity` at the top of any file. PYTHONPATH will now include the project root.
 
 ##### How does `test_email.py` import `email.py`?
 `from lib import email` works, and allows you to run `python test_email.py`
 
 ##### How does `reports.py` import `email.py`?
 `from lib import email` works, and allows you to run `./reports.py`
+
+##### How does it work?
+`imsanity` starts at the directory of the python file being executed (or if loaded interactively, the CWD), and goes up the directory tree until it finds a `.imsanity` file. It then adds the directory of the `.imsanity` file to the PYTHONPATH.
 
 ### Does python really not have a solution to this?
 
@@ -55,3 +59,5 @@ at the top of every file. Key quotes:
 - if the script is moved to a different package or subpackage, the boilerplate will need to be updated manually
 
 My only response to this is: ahahahahahahahahaha :'(
+
+It's so sad that such a beautiful language has such a broken import system.
