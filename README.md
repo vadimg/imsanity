@@ -51,7 +51,7 @@ if __name__ == "__main__" and __package__ is None:
     __package__ = "expected.package.name"
 ```
 at the top of every file. Key quotes:
-- > this boilerplate is sufficient only if the top level package is already accessible via `sys.path`
-- > if the script is moved to a different package or subpackage, the boilerplate will need to be updated manually
+- this boilerplate is sufficient only if the top level package is already accessible via `sys.path`
+- if the script is moved to a different package or subpackage, the boilerplate will need to be updated manually
 
 My only response to this is: ahahahahahahahahaha :'(
